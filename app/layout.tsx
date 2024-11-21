@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import Header from "@/components/Header";
+import Aside from "@/components/Aside";
+import TOC from "@/components/TOC";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,9 +29,34 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background antialiased`}
       >
-        {children}
+        <div className="relative flex min-h-screen flex-col bg-background">
+          <div className="border-border/40 dark:border-border">
+            <div className="mx-auto w-full border-border/40 dark:border-border min-[1800px]:max-w-[1536px] min-[1800px]:border-x">
+              <Header />
+              <div className="flex-1">
+                <div className="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10 mx-auto">
+                  <Aside />
+                  <main className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+                    <div className="mx-auto w-full min-w-0 max-w-3xl">
+                      {children}
+                    </div>
+                    <TOC />
+                  </main>
+                </div>
+              </div>
+              <footer className="border-t border-border/40 py-6 dark:border-border md:px-8 md:py-0">
+                <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+                  <p className="text-balance text-center text-sm leading-loose text-muted-foreground md:text-left">Built by
+                    <a href="https://twitter.com/shadcn" target="_blank" rel="noreferrer" className="font-medium underline underline-offset-4">shadcn</a>.
+                    The source code is available on <a href="https://github.com/shadcn-ui/ui" target="_blank" rel="noreferrer" className="font-medium underline underline-offset-4">GitHub</a>.
+                  </p>
+                </div>
+              </footer>
+            </div>
+          </div>
+        </div>
       </body>
     </html>
   );
