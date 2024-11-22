@@ -29,7 +29,7 @@ export async function getFiles(dir = DOCS_DIRECTORY): Promise<string[]> {
 /**
  * MDX 파일의 frontmatter와 content를 파싱합니다.
  */
-export async function getMatter(filePath: string) {
+export async function getMatter(filePath: string): Promise<{ data: { [key: string]: any }; content: string }> {
     const source = await fs.readFile(filePath, 'utf8')
     const { data, content } = matter(source)
 

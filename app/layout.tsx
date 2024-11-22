@@ -1,6 +1,8 @@
 import Aside from "@/components/Aside";
 import Header from "@/components/Header";
+import TableOfContents from "@/components/TableOfContents";
 import { generateSidebar } from '@/utils/generateSidebar';
+import { generateToc } from "@/utils/getToc";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -27,7 +29,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const sidebarSections = await generateSidebar()
-
+  const toc = await generateToc();
   return (
     <html lang="en">
       <body
@@ -44,7 +46,7 @@ export default async function RootLayout({
                     <div className="mx-auto w-full min-w-0 max-w-3xl">
                       {children}
                     </div>
-                    {/* <TableOfContents items={toc} /> */}
+                    <TableOfContents records={toc} />
                   </main>
                 </div>
               </div>

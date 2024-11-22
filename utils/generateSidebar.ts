@@ -12,7 +12,7 @@ export async function generateSidebar() {
         }
         acc[category].push(doc)
         return acc
-    }, {})
+    }, {} as Record<string, any>)
 
     // 사이드바 구조로 변환
     const sidebar = Object.entries(groupedDocs).map(([category, items]) => ({
