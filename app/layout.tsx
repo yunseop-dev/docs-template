@@ -1,10 +1,6 @@
 import Aside from "@/components/Aside";
-import { DocNavigation } from "@/components/DocNavigation";
 import Header from "@/components/Header";
-import TableOfContents from "@/components/TableOfContents";
 import { generateSidebar } from '@/utils/generateSidebar';
-import { generateToc } from "@/utils/getToc";
-import { getAllDocs } from "@/utils/mdx";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -31,8 +27,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const sidebarSections = await generateSidebar()
-  const toc = await generateToc();
-  const docs = await getAllDocs()
 
   return (
     <html lang="en">

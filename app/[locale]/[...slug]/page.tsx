@@ -12,19 +12,22 @@ import { TableOfContents } from '@/components/TableOfContents'
 import remarkGfm from 'remark-gfm'
 import rehypePrism from 'rehype-prism-plus'
 import rehypeSlug from 'rehype-slug'
+import { Locale } from '@/config/i18n'
 
 interface PageProps {
   params: Promise<{
-    slug: string[]
+    slug: string[];
+    locale: Locale;
   }>
 }
 
-export async function generateMetadata({ params }: { params: { slug: string[] } }) {
-  const { data } = await getDocBySlug(params.slug.join('/'))
+export async function generateMetadata({ params }: PageProps) {
+  const { slug, locale } = await params;
+  const { frontmatter } = await getDocBySlug(slug, locale);
 
   return {
-    title: `${data.title} | Documentation`,
-    description: data.description,
+    title: `${frontmatter.title} | Documentation`,
+    description: frontmatter.description,
   }
 }
 
@@ -34,19 +37,16 @@ export async function generateStaticParams() {
 }
 
 export default async function DocsPage({ params }: PageProps) {
-  const { slug } = await params
+  const { slug, locale } = await params
   const currentSlug = slug.join('/')
-  const { content } = await getDocBySlug(currentSlug)
+  const { content } = await getDocBySlug(slug, locale)
   const toc = await generateTocForDocument(content)
-  const navigation = await getNavigationData(currentSlug)
-  console.log('navigation', navigation);
-
+  const navigation = await getNavigationData(currentSlug, locale)
   // MDX 파일 읽기
-  const filePath = path.join(process.cwd(), 'content', `${slug.join('/')}.mdx`)
-
+  const filePath = path.join(process.cwd(), 'content', locale, `${slug.join('/')}.mdx`)
+  
   try {
     const source = fs.readFileSync(filePath, 'utf8')
-
     const { content } = await compileMDX({
       source,
       options: {
@@ -106,7 +106,6 @@ export default async function DocsPage({ params }: PageProps) {
         </div>)
       },
     })
-
     return (
       <div className="flex gap-8 max-w-7xl mx-auto px-4">
         <div className="flex-1">

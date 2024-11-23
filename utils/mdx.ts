@@ -2,6 +2,7 @@
 import fs from 'fs/promises'
 import path from 'path'
 import matter from 'gray-matter'
+import { Locale } from '@/config/i18n'
 
 const DOCS_DIRECTORY = path.join(process.cwd(), 'content')
 
@@ -11,8 +12,8 @@ export async function getMdxFiles() {
         .filter(file => file.endsWith('.mdx'))
         .map(file => {
             const relativePath = path.relative(DOCS_DIRECTORY, file)
-            const slug = relativePath.replace(/\.mdx$/, '').split(path.sep)
-            return { slug }
+            const [locale, ...slug] = relativePath.replace(/\.mdx$/, '').split(path.sep)
+            return { locale, slug }
         })
 }
 
@@ -46,6 +47,7 @@ export async function getMatter(filePath: string): Promise<{ data: { [key: strin
         .replace(DOCS_DIRECTORY, '')
         .replace(/\/page/, '')
         .replace(/\.mdx?$/, '')
+        // .replace(/\/(ko|en)/, '')
         .replace(/\\/g, '/') // Windows 경로 구분자 처리
 
     return {
@@ -60,9 +62,18 @@ export async function getMatter(filePath: string): Promise<{ data: { [key: strin
 /**
  * 특정 MDX 파일의 메타데이터를 가져옵니다.
  */
-export function getDocBySlug(slug: string) {
-    const filePath = path.join(DOCS_DIRECTORY, `${slug}.mdx`)
-    return getMatter(filePath)
+export async function getDocBySlug(slug: string[], locale: Locale) {
+    const slugPath = Array.isArray(slug) ? slug.join('/') : slug
+    const filePath = path.join(DOCS_DIRECTORY, locale, `${slugPath}.mdx`)
+
+    const source = await fs.readFile(filePath, 'utf8')
+    const { content, data } = matter(source)
+
+    return {
+        content,
+        frontmatter: data,
+        slug: slugPath
+    }
 }
 
 /**

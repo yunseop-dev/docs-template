@@ -19,7 +19,8 @@ export async function generateSidebar() {
         title: category.charAt(0).toUpperCase() + category.slice(1),
         items: items.map((item: any) => ({
             title: item.title,
-            href: `/docs${item.slug}`,
+            href: item.slug,
+            locale: item.slug.split('/')[1]
         })),
     }))
 

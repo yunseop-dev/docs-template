@@ -7,6 +7,8 @@ import {
   NavigationMenuList
 } from "@/components/ui";
 import Link from "next/link";
+import LanguageSwitch from "./LanguageSwitch";
+
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full bg-white/60 backdrop-blur-sm border-b border-zinc-200/40">
@@ -39,6 +41,7 @@ export default function Header() {
         </Button>
 
         <div className="flex flex-1 items-center justify-end gap-2">
+          <LanguageSwitch />
           <div className="w-64 relative">
             <Input
               className="h-8 w-full bg-zinc-100/50 px-4 text-sm text-zinc-500 border-zinc-200"

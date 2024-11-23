@@ -1,7 +1,6 @@
 // components/DocNavigation.tsx
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
-import { useKeyboardNav } from '@/hooks/useKeyboardNav'
 
 interface DocNavigation {
   title: string
@@ -18,7 +17,7 @@ export function DocNavigation({ prev, next }: DocNavigationProps) {
     <nav className="flex justify-between mt-8 pt-8 border-t">
       {prev ? (
         <Link
-          href={`/docs${prev.slug}`}
+          href={prev.slug}
           className="group flex items-center gap-2 text-gray-600 hover:text-gray-900"
         >
           <ChevronLeft className="w-5 h-5" />
@@ -33,7 +32,7 @@ export function DocNavigation({ prev, next }: DocNavigationProps) {
 
       {next ? (
         <Link
-          href={`/docs${next.slug}`}
+          href={next.slug}
           className="group flex items-center gap-2 text-right text-gray-600 hover:text-gray-900"
         >
           <div>
