@@ -13,7 +13,7 @@ interface DocNavigation {
 
 interface DocNavigationProps {
   docs: {
-    [key: string]: any;
+    [key: string]: DocNavigation;
   }[]
 }
 
