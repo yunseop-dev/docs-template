@@ -3,11 +3,19 @@ import fs from 'fs/promises'
 import path from 'path'
 import matter from 'gray-matter'
 
-const DOCS_DIRECTORY = path.join(process.cwd(), 'app', 'docs')
+const DOCS_DIRECTORY = path.join(process.cwd(), 'content')
 
-/**
- * docs 디렉토리 내의 모든 MDX 파일을 재귀적으로 찾습니다.
- */
+export async function getMdxFiles() {
+    const files = await getFiles()
+    return files
+        .filter(file => file.endsWith('.mdx'))
+        .map(file => {
+            const relativePath = path.relative(DOCS_DIRECTORY, file)
+            const slug = relativePath.replace(/\.mdx$/, '').split(path.sep)
+            return { slug }
+        })
+}
+
 export async function getFiles(dir = DOCS_DIRECTORY): Promise<string[]> {
     const entries = await fs.readdir(dir, { withFileTypes: true })
 

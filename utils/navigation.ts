@@ -1,3 +1,6 @@
+// utils/navigation.ts
+import { getAllDocs } from './mdx'
+
 interface DocNavigation {
   title: string
   slug: string
@@ -8,12 +11,10 @@ interface NavigationData {
   next: DocNavigation | null
 }
 
-export function getNavigationData(docs: {
-  [key: string]: any;
-}[], currentSlug: string): NavigationData {
-
-  // 현재 문서의 인덱스 찾기
-  const currentIndex = docs.findIndex((doc) => doc.slug === currentSlug)
+export async function getNavigationData(currentSlug: string): Promise<NavigationData> {
+  const docs = await getAllDocs()
+  const currentIndex = docs.findIndex((doc) => doc.slug === `/${currentSlug}`)
+  console.log('docs', docs, currentIndex, currentSlug)
 
   return {
     prev: currentIndex > 0 ? {

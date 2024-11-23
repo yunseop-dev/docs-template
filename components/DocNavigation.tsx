@@ -1,9 +1,6 @@
-'use client';
-import { getNavigationData } from '@/utils/navigation';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
+// components/DocNavigation.tsx
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import Link from 'next/link'
 import { useKeyboardNav } from '@/hooks/useKeyboardNav'
 
 interface DocNavigation {
@@ -12,20 +9,11 @@ interface DocNavigation {
 }
 
 interface DocNavigationProps {
-  docs: {
-    [key: string]: DocNavigation;
-  }[]
+  prev: DocNavigation | null
+  next: DocNavigation | null
 }
 
-export function DocNavigation({ docs }: DocNavigationProps) {
-  const pathname = usePathname();
-  const currentSlug = pathname.replace('/docs', '');
-  const { prev, next } = useMemo(() => getNavigationData(docs, currentSlug), [docs, currentSlug])
-  useKeyboardNav(
-    prev?.slug ? `/docs${prev.slug}` : null,
-    next?.slug ? `/docs${next.slug}` : null
-  )
-
+export function DocNavigation({ prev, next }: DocNavigationProps) {
   return (
     <nav className="flex justify-between mt-8 pt-8 border-t">
       {prev ? (
