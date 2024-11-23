@@ -1,8 +1,10 @@
 import Aside from "@/components/Aside";
+import { DocNavigation } from "@/components/DocNavigation";
 import Header from "@/components/Header";
 import TableOfContents from "@/components/TableOfContents";
 import { generateSidebar } from '@/utils/generateSidebar';
 import { generateToc } from "@/utils/getToc";
+import { getAllDocs } from "@/utils/mdx";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -30,6 +32,8 @@ export default async function RootLayout({
 }>) {
   const sidebarSections = await generateSidebar()
   const toc = await generateToc();
+  const docs = await getAllDocs()
+
   return (
     <html lang="en">
       <body
@@ -45,6 +49,7 @@ export default async function RootLayout({
                   <main className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
                     <div className="mx-auto w-full min-w-0 max-w-3xl">
                       {children}
+                      <DocNavigation docs={docs} />
                     </div>
                     <TableOfContents records={toc} />
                   </main>

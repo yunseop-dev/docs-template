@@ -1,7 +1,6 @@
 'use client';
-import { usePathname } from "next/navigation"
+import { usePathname } from "next/navigation";
 
-// components/TableOfContents.tsx
 interface TocItem {
   title: string
   url: string
@@ -15,7 +14,8 @@ interface TableOfContentsProps {
 
 export default function TableOfContents({ records }: TableOfContentsProps) {
   const pathname = usePathname();
-  const items = records[pathname.replace('/docs', '')] ?? [];
+  const slug = pathname.replace('/docs', '');
+  const items = records[slug] ?? [];
   if (items.length === 0) return null;
   return (
     <nav className="toc">
