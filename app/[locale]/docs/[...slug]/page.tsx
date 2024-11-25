@@ -12,7 +12,7 @@ import { TableOfContents } from '@/components/TableOfContents'
 import remarkGfm from 'remark-gfm'
 import rehypePrism from 'rehype-prism-plus'
 import rehypeSlug from 'rehype-slug'
-import { Locale } from '@/config/i18n'
+import { defaultLocale, Locale } from '@/config/i18n'
 
 interface PageProps {
   params: Promise<{
@@ -22,7 +22,7 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const { slug, locale } = await params;
+  const { slug, locale = defaultLocale } = await params;
   const { frontmatter } = await getDocBySlug(slug, locale);
 
   return {
@@ -36,7 +36,7 @@ export async function generateStaticParams() {
   return posts
 }
 
-export default async function DocsPage({ params }: PageProps) {
+export async function DocsPage({ params }: PageProps) {
   const { slug, locale } = await params
   const currentSlug = slug.join('/')
   const { content } = await getDocBySlug(slug, locale)
@@ -44,7 +44,7 @@ export default async function DocsPage({ params }: PageProps) {
   const navigation = await getNavigationData(currentSlug, locale)
   // MDX 파일 읽기
   const filePath = path.join(process.cwd(), 'content', locale, `${slug.join('/')}.mdx`)
-  
+
   try {
     const source = fs.readFileSync(filePath, 'utf8')
     const { content } = await compileMDX({
@@ -122,3 +122,5 @@ export default async function DocsPage({ params }: PageProps) {
     notFound()
   }
 }
+
+export default DocsPage;

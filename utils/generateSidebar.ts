@@ -1,4 +1,5 @@
 // utils/generateSidebar.ts
+import { defaultLocale, locales } from '@/config/i18n'
 import { getAllDocs } from './mdx'
 
 export async function generateSidebar() {
@@ -17,11 +18,14 @@ export async function generateSidebar() {
     // 사이드바 구조로 변환
     const sidebar = Object.entries(groupedDocs).map(([category, items]) => ({
         title: category.charAt(0).toUpperCase() + category.slice(1),
-        items: items.map((item: any) => ({
-            title: item.title,
-            href: item.slug,
-            locale: item.slug.split('/')[1]
-        })),
+        items: items.map((item: any) => {
+            const locale = item.slug.split('/')[1];
+            return ({
+                title: item.title,
+                href: item.slug,
+                locale: locales.includes(locale) ? locale : defaultLocale
+            })
+        }),
     }))
 
     return sidebar

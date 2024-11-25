@@ -1,5 +1,5 @@
 'use client';
-import { Locale } from '@/config/i18n';
+import { defaultLocale, Locale, locales } from '@/config/i18n';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 
@@ -29,7 +29,7 @@ export default function Sidebar({ sections }: { sections: SidebarSection[] }) {
             <ul className="space-y-2">
               {section
                 .items
-                .filter((item) => item.locale === params.locale)
+                .filter((item) => item.locale === (locales.includes(params.locale as Locale) ? params.locale : defaultLocale))
                 .map((item) => (
                   <li key={item.href}>
                     <Link

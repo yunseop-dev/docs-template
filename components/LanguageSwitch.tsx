@@ -2,24 +2,34 @@
 'use client';
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { locales, localeNames } from '@/config/i18n'
+import { locales, localeNames, defaultLocale } from '@/config/i18n'
 
 export default function LanguageSwitch() {
   const pathname = usePathname()
-  const currentLocale = pathname.split('/')[1]
-  const restPath = pathname.split('/').slice(2).join('/')
+  const segments = pathname.split('/')
+
+
+  const isDefaultPath = !locales.includes(segments[1] as any)
+  const currentLocale = isDefaultPath ? defaultLocale : segments[1]
+  const restPath = isDefaultPath ? segments.slice(1).join('/') : segments.slice(2).join('/')
 
   return (
     <div className="flex gap-4">
-      {locales.map(locale => (
-        <Link
-          key={locale}
-          href={`/${locale}/${restPath}`}
-          className={locale === currentLocale ? 'font-bold' : ''}
-        >
-          {localeNames[locale]}
-        </Link>
-      ))}
+      {locales.map(locale => {
+        const href = locale === defaultLocale
+          ? `/${restPath}`
+          : `/${locale}/${restPath}`
+
+        return (
+          <Link
+            key={locale}
+            href={href}
+            className={locale === currentLocale ? 'font-bold' : ''}
+          >
+            {localeNames[locale]}
+          </Link>
+        )
+      })}
     </div>
   )
 }

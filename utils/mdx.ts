@@ -2,7 +2,7 @@
 import fs from 'fs/promises'
 import path from 'path'
 import matter from 'gray-matter'
-import { Locale } from '@/config/i18n'
+import { defaultLocale, Locale } from '@/config/i18n'
 
 const DOCS_DIRECTORY = path.join(process.cwd(), 'content')
 
@@ -47,7 +47,6 @@ export async function getMatter(filePath: string): Promise<{ data: { [key: strin
         .replace(DOCS_DIRECTORY, '')
         .replace(/\/page/, '')
         .replace(/\.mdx?$/, '')
-        // .replace(/\/(ko|en)/, '')
         .replace(/\\/g, '/') // Windows 경로 구분자 처리
 
     return {
@@ -88,9 +87,13 @@ export async function getAllDocs() {
             return data
         })
     )
-
-    // 정렬이 필요한 경우 여기서 처리
-    return docs.sort((a, b) => {
+    return docs.map((item) => {
+        const [, locale, ...slug] = item.slug.split('/');
+        if (locale === defaultLocale) {
+            return ({ ...item, slug: `/docs/${slug.join('/')}` })
+        }
+        return ({ ...item, slug: `/${locale}/docs/${slug.join('/')}` });
+    }).sort((a, b) => {
         if (a.order && b.order) {
             return a.order - b.order
         }

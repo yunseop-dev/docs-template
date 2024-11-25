@@ -1,5 +1,5 @@
 // utils/navigation.ts
-import { Locale } from '@/config/i18n'
+import { defaultLocale, Locale, locales } from '@/config/i18n'
 import { getAllDocs } from './mdx'
 
 interface DocNavigation {
@@ -14,10 +14,12 @@ interface NavigationData {
 
 export async function getNavigationData(currentSlug: string, locale: Locale): Promise<NavigationData> {
   const docs = await getAllDocs()
-  const localeDocs = docs.filter((item) => {
+  const localeDocs = locale === defaultLocale ? docs.filter((item) => {
+    return !locales.includes(item.slug.split('/')[1] as Locale);
+  }) : docs.filter((item) => {
     return item.slug.split('/')[1] === locale;
   })
-  const currentIndex = localeDocs.findIndex((doc) => doc.slug === `/${locale}/${currentSlug}`)
+  const currentIndex = localeDocs.findIndex((doc) => locale === defaultLocale ? doc.slug === `/docs/${currentSlug}` : doc.slug === `/${locale}/docs/${currentSlug}`)
 
   return {
     prev: currentIndex > 0 ? {
